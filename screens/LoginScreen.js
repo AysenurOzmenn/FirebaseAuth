@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity, Image } from 'react-native'
 import React, { useState } from 'react'
 import { auth } from '../firebase';
+import aaImage from 'C:\\Users\\YAZILIM-NB3\\Desktop\\app\\Auth\\Login\\src\\image\\AA.png'
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
@@ -13,9 +14,12 @@ export default function LoginScreen() {
         })
         .catch((error) => alert(error.message));
     };
-    
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
+        <View style={styles.image}>
+        <Image source={aaImage} style={styles.inputIcon} />
+        </View>
     <View style={styles.inputContainer}>
       <TextInput style={styles.input} placeholder='Email' value={email} onChangeText={text => setEmail(text)}/>
       <TextInput style={styles.input} placeholder='Password' value={password} onChangeText={text => setPassword(text)} secureTextEntry/>
@@ -38,6 +42,17 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: '#fff',
+    },
+    inputIcon: {
+        width: 250,
+        height: 250,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        paddingHorizontal: 10,
+        marginBottom: 10,
+        borderRadius: 5,
     },
     inputContainer: {
       width: '80%',
