@@ -1,9 +1,19 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
+import { auth } from '../firebase';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const handleSignUp = ()=>{
+        auth.createUserWithEmailAndPassword(email,password).then(userCredentials =>{
+            const user = userCredentials.user;
+            console.log('Kullanıcı', user.email);
+        })
+        .catch((error) => alert(error.message));
+    };
+    
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
     <View style={styles.inputContainer}>
@@ -14,7 +24,7 @@ export default function LoginScreen() {
         <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Giriş Yap</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button , styles.outlineButton]}>
+        <TouchableOpacity onPress={handleSignUp} style={[styles.button , styles.outlineButton]}>
             <Text style={styles.outlineButtonText}>Kayıt ol</Text>
         </TouchableOpacity>
     </View>
