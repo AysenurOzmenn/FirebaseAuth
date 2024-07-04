@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, Animated, Easing } from 'react-native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,6 +7,15 @@ export default function HomeScreen() {
     const navigation = useNavigation();
     const [animationRunning, setAnimationRunning] = useState(true);
     const rotateAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (!user) {
+                navigation.navigate('Login');
+            }
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     const handleToggleAnimation = () => {
         if (animationRunning) {
@@ -28,9 +37,11 @@ export default function HomeScreen() {
     };
 
     const handleSignOut = () => {
-        auth.signOut().then(()=>{
-            navigation.navigate('Login');
-        }).catch(error => alert(error.message));
+        auth.signOut()
+            .then(() => {
+                navigation.navigate('Login');
+            })
+            .catch(error => alert(error.message));
     };
 
     return (
