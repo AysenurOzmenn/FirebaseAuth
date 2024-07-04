@@ -1,16 +1,35 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { auth } from '../firebase';
 import aaImage from 'C:\\Users\\YAZILIM-NB3\\Desktop\\app\\Auth\\Login\\src\\image\\AA.png'
+import { useNavigation } from '@react-navigation/native';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const navigation=useNavigation();
+    useEffect(() => {
+      auth.onAuthStateChanged(user =>{
+        if(user){
+            navigation.navigate('Home');
+        }
+      })
+    }, [])
+    
+
     const handleSignUp = ()=>{
         auth.createUserWithEmailAndPassword(email,password).then(userCredentials =>{
             const user = userCredentials.user;
             console.log('Kullanıcı', user.email);
+        })
+        .catch((error) => alert(error.message));
+    };
+
+    const handleLogin = ()=>{
+        auth.signInWithEmailAndPassword(email,password).then(userCredentials =>{
+            const user = userCredentials.user;
+            console.log('Kullanıcı giriş yaptı', user.email);
         })
         .catch((error) => alert(error.message));
     };
@@ -25,7 +44,7 @@ export default function LoginScreen() {
       <TextInput style={styles.input} placeholder='Password' value={password} onChangeText={text => setPassword(text)} secureTextEntry/>
     </View>
     <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
             <Text style={styles.buttonText}>Giriş Yap</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSignUp} style={[styles.button , styles.outlineButton]}>
